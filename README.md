@@ -27,7 +27,7 @@
 
 A evil portal is a technique used to deceive users of a Wi-Fi network by redirecting them to a malicious web page instead of the expected authentication or home page.
 
-__Note :__ *"Issues" and "Pull Request" are welcome.*
+__Note :__ *"Issues" and "Pull Requests" are welcome.*
 
 ## Tested On
 
