@@ -24,6 +24,7 @@ hacker@hacker-computer:~/.../WiFi-Pineapple-MK7_Evil-Portal$ msfvenom --arch x86
 ### WiFi Pineapple - Web UI
 
 PineAP Suite > Impersonation > Spoofed AP Pool : SSID "Apartment-LivingRoom_Camera" [Add]
+
 PineAP Suite > PineAP : [Toggle] Impersonate all networks, [Check] Advertise AP Impersonation Pool and [Save]
 
 __Note :__ *The SSID "Apartment-LivingRoom_Camera" is an example.*
