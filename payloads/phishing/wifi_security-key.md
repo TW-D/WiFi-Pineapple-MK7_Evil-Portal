@@ -34,6 +34,7 @@ $AP_ENCRYPTION = (string) 'WPA2 PSK (CCMP)';
 ### WiFi Pineapple - Web UI
 
 PineAP Suite > Impersonation > Spoofed AP Pool : SSID "Home-Network " [Add]
+
 PineAP Suite > PineAP : [Toggle] Impersonate all networks, [Check] Advertise AP Impersonation Pool and [Save]
 
 __Note :__ *The SSID "Home-Network " is an example.*
